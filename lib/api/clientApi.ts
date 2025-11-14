@@ -77,7 +77,7 @@ type CheckSessionRequest = {
 };
 
 export const checkSession = async () => {
-    const res = await NextServer.get<CheckSessionRequest>('/api/auth/session');
+    const res = await NextServer.get<CheckSessionRequest>('/auth/session');
     return res.data.success;
 };
 
