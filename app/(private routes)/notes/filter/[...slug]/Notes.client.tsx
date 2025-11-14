@@ -36,6 +36,7 @@ export default function NotesClient({ tag }: Props) {
     const { data, isFetching, error } = useQuery({
         queryKey: ['notes', page, searchValue, tag],
         queryFn: async () => {
+            // ✅ Логи для дебагу
             console.log('Fetching notes with:', { page, searchValue, tag });
             const res = await fetchNotes(page, 12, searchValue, tag);
             console.log('Notes fetched:', res);
@@ -44,7 +45,7 @@ export default function NotesClient({ tag }: Props) {
         refetchOnMount: false,
     });
 
-    
+    // Безпечна перевірка
     const notes = data?.notes ?? [];
     const totalPages = data?.totalPages ?? 1;
 
@@ -53,7 +54,9 @@ export default function NotesClient({ tag }: Props) {
             <header className={css.toolbar}>
                 <SearchBox value={inputValue} onChange={handleInputValue} />
 
-                {totalPages > 1 && <Pagination totalPages={totalPages} page={page} setPage={setPage} />}
+                {totalPages > 1 && (
+                    <Pagination totalPages={totalPages} page={page} setPage={setPage} />
+                )}
 
                 <button
                     className={css.button}
@@ -65,7 +68,12 @@ export default function NotesClient({ tag }: Props) {
 
             {isFetching && <Loader />}
 
-            {error && <p>Could not fetch the list of notes. {error instanceof Error ? error.message : ''}</p>}
+            {error && (
+                <p>
+                    Could not fetch the list of notes.{' '}
+                    {error instanceof Error ? error.message : ''}
+                </p>
+            )}
 
             {!error && notes.length > 0 ? (
                 <NoteList notes={notes} />
